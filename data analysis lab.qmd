@@ -2,6 +2,7 @@
 title: "data analysis lab"
 author: "Sami Kader-Yettefti"
 format: html
+code-fold: true
 ---
 
 The URL to my fork is: 
@@ -65,3 +66,14 @@ ggplot(filtered_grades, aes(x=Exam)) +
   ylab("Count")
 ```
 
+### question 5
+
+```{r}
+group_counts <- grades %>%
+  group_by(Group) %>%
+  summarise(Count = n())
+```
+
+```{r table2, results='asis'}
+kable(group_counts, caption = "Count for Exam Grades")
+```
