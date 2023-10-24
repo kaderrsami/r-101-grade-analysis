@@ -184,3 +184,35 @@ missing_online_tests_by_student <- long_format_grades %>%
   summarise(Missing_Online_Tests = sum(is.na(value)))
 ```
 
+### question 15
+
+#### Approach 1: Using dplyr's Row-wise Operations
+
+```{r}
+missing_counts <- grades %>%
+  rowwise() %>%
+  mutate(missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))) %>%
+  ungroup()
+
+ggplot(missing_counts, aes(x = missing_online_tests)) +
+  geom_histogram(binwidth = 1, fill = "blue", alpha = 0.7, color= "black") +
+  ggtitle("Distribution of Missing Online Test Grades per Student") +
+  xlab("Number of Missing Online Test Grades") +
+  ylab("Number of Students")
+```
+
+#### Work in progress
+
+```{r}
+# Join with the original data frame
+combined_data <- left_join(missing_online_tests_by_student, missing_counts, by = "Id")
+combined_dataa <- ungroup(combined_data)
+
+# Visualize the data
+ggplot(combined_dataa, aes(x = Missing_Online_Tests, y = Exam)) +
+  geom_point() +
+  ggtitle("Relationship between Missing Online Tests and Exam Scores") +
+  xlab("Number of Missing Online Tests") +
+  ylab("Exam Score")
+```
+
