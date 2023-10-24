@@ -147,3 +147,10 @@ long_format_grades <- grades %>%
   gather(key = "name", value = "value", -Id, -Group)
 ```
 
+### question 11
+
+```{r}
+missing_grades_count <- long_format_grades %>%
+  group_by(Id) %>%
+  summarise(Missing_Grades = sum(is.na(value)))
+```
