@@ -89,3 +89,28 @@ ggplot(group_counts, aes(x=Group, y=Count)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+### question 7
+
+Representation of the distribution of the grades at the `Exam` conditioned by the group
+
+
+```{r facet}
+ggplot(filtered_grades, aes(x=Exam)) +
+  geom_histogram(binwidth=1) +
+  facet_wrap(~Group) +
+  ggtitle("Distribution of Exam Grades by Group (Faceted Histogram)") +
+  xlab("Exam Grades") +
+  ylab("Frequency")
+```
+
+An other epresentation of the distribution of the grades at the `Exam` conditioned by the group
+
+```{r box}
+ggplot(filtered_grades, aes(x=Group, y=Exam)) +
+  geom_boxplot() +
+  ggtitle("Distribution of Exam Grades by Group (Boxplot)") +
+  xlab("Group") +
+  ylab("Exam Grades") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
