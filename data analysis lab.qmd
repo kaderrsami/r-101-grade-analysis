@@ -77,3 +77,15 @@ group_counts <- grades %>%
 ```{r table2, results='asis'}
 kable(group_counts, caption = "Count for Exam Grades")
 ```
+
+### question 6
+
+```{r bar_count}
+ggplot(group_counts, aes(x=Group, y=Count)) +
+  geom_bar(stat="identity") +
+  ggtitle("Number of Students in Each Group") +
+  xlab("Group") +
+  ylab("Number of Students") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
