@@ -154,3 +154,14 @@ missing_grades_count <- long_format_grades %>%
   group_by(Id) %>%
   summarise(Missing_Grades = sum(is.na(value)))
 ```
+
+### question 12
+
+```{r}
+ggplot(missing_grades_count, aes(x=Missing_Grades)) +
+  geom_histogram(binwidth=1, fill="blue", color="black") +
+  ggtitle("Distribution of Number of Missing Grades Per Student") +
+  xlab("Number of Missing Grades") +
+  ylab("Number of Students")
+```
+
