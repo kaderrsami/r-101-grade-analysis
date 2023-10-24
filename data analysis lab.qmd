@@ -4,10 +4,12 @@ author: "Sami Kader-Yettefti"
 format: html
 ---
 
+The URL to my fork is: 
+
 <https://github.com/kaderrsami/r-101-grade-analysis>
 
 ```{r setup1, include=FALSE}
-here::i_am("dplyr-102.Rproj")
+here::i_am("r-101-grade-analysis.Rproj")
 
 library(here)
 library(vroom)
@@ -17,5 +19,11 @@ library(tidyr)
 library(knitr)
 
 theme_set(theme_bw())
+```
+
+### question 1
+
+```{r setup2, include=FALSE}
+grades <- vroom(here("grades.csv"))
 ```
 
