@@ -38,7 +38,16 @@ exam_stats <- grades %>%
             Mean = mean(Exam, na.rm = TRUE))
 ```
 
-```{r, results='asis'}
+```{r table1, results='asis'}
 kable(exam_stats, caption = "Statistics for Exam Grades")
 ```
+
+### question 3
+```{r}
+num_missing_exam <- grades %>%
+  filter(is.na(Exam)) %>%
+  summarise(Count = n()) %>%
+  pull(Count)
+```
+A total of `r num_missing_exam` students did not take the final exam.
 
