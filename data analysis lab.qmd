@@ -43,11 +43,25 @@ kable(exam_stats, caption = "Statistics for Exam Grades")
 ```
 
 ### question 3
+
 ```{r}
 num_missing_exam <- grades %>%
   filter(is.na(Exam)) %>%
   summarise(Count = n()) %>%
   pull(Count)
 ```
+
 A total of `r num_missing_exam` students did not take the final exam.
+
+### question 4
+
+```{r bar_exam_grades}
+filtered_grades <- grades %>% filter(!is.na(Exam))
+
+ggplot(filtered_grades, aes(x=Exam)) +
+  geom_bar() +
+  ggtitle("Bar Plot for Exam Grades") +
+  xlab("Exam Grades") +
+  ylab("Count")
+```
 
