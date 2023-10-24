@@ -23,7 +23,22 @@ theme_set(theme_bw())
 
 ### question 1
 
-```{r setup2, include=FALSE}
+```{r setup2}
 grades <- vroom(here("grades.csv"))
+```
+
+### question 2
+
+```{r}
+exam_stats <- grades %>% 
+  summarise(
+            Min = min(Exam, na.rm = TRUE),
+            Max = max(Exam, na.rm = TRUE),
+            Median = median(Exam, na.rm = TRUE),
+            Mean = mean(Exam, na.rm = TRUE))
+```
+
+```{r, results='asis'}
+kable(exam_stats, caption = "Statistics for Exam Grades")
 ```
 
