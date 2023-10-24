@@ -165,3 +165,12 @@ ggplot(missing_grades_count, aes(x=Missing_Grades)) +
   ylab("Number of Students")
 ```
 
+### question 13
+
+```{r}
+students_missed_exam_by_group <- long_format_grades %>%
+  filter(name == "Exam") %>%
+  group_by(Group) %>%
+  summarise(Students_Missed_Exam = sum(is.na(value)))
+```
+
