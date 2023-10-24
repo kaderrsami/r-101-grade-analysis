@@ -139,3 +139,11 @@ ggplot(missed_exam_counts, aes(x=Group, y=Missed_Exam_Count)) +
   ylab("Number of Students") +
   theme(axis.text.x = element_text(angle = 42, hjust = 1))
 ```
+
+### question 10
+
+```{r}
+long_format_grades <- grades %>%
+  gather(key = "name", value = "value", -Id, -Group)
+```
+
