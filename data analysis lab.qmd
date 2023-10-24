@@ -20,6 +20,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(knitr)
+library(stringr)
 
 theme_set(theme_bw())
 ```
@@ -172,5 +173,14 @@ students_missed_exam_by_group <- long_format_grades %>%
   filter(name == "Exam") %>%
   group_by(Group) %>%
   summarise(Students_Missed_Exam = sum(is.na(value)))
+```
+
+### question 14
+
+```{r}
+missing_online_tests_by_student <- long_format_grades %>%
+  filter(str_starts(name, "Online_MCQ")) %>%
+  group_by(Id) %>%
+  summarise(Missing_Online_Tests = sum(is.na(value)))
 ```
 
