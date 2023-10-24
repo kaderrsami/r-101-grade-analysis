@@ -5,6 +5,8 @@ format: html
 code-fold: true
 ---
 
+# Lab work
+
 The URL to my fork is: 
 
 <https://github.com/kaderrsami/r-101-grade-analysis>
@@ -86,7 +88,7 @@ ggplot(group_counts, aes(x=Group, y=Count)) +
   ggtitle("Number of Students in Each Group") +
   xlab("Group") +
   ylab("Number of Students") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 42, hjust = 1))
 ```
 
 ### question 7
@@ -111,8 +113,10 @@ ggplot(filtered_grades, aes(x=Group, y=Exam)) +
   ggtitle("Distribution of Exam Grades by Group (Boxplot)") +
   xlab("Group") +
   ylab("Exam Grades") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 42, hjust = 1))
 ```
+# Homework
+
 ### question 8
 
 ```{r}
@@ -123,4 +127,15 @@ missed_exam_counts <- grades %>%
 
 ```{r table3, results='asis'}
 knitr::kable(missed_exam_counts, caption = "Number of Students Who Missed the Exam in Each Group")
+```
+
+### question 9
+
+```{r missed_exam_count}
+ggplot(missed_exam_counts, aes(x=Group, y=Missed_Exam_Count)) +
+  geom_col() +
+  ggtitle("Number of Students Who Missed the Exam by Group") +
+  xlab("Group") +
+  ylab("Number of Students") +
+  theme(axis.text.x = element_text(angle = 42, hjust = 1))
 ```
