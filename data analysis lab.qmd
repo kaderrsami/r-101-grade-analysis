@@ -113,4 +113,14 @@ ggplot(filtered_grades, aes(x=Group, y=Exam)) +
   ylab("Exam Grades") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+### question 8
 
+```{r}
+missed_exam_counts <- grades %>%
+  group_by(Group) %>%
+  summarise(Missed_Exam_Count = sum(is.na(Exam)))
+```
+
+```{r table3, results='asis'}
+knitr::kable(missed_exam_counts, caption = "Number of Students Who Missed the Exam in Each Group")
+```
