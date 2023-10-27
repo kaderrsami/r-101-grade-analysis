@@ -187,26 +187,22 @@ missing_online_tests_by_student <- long_format_grades %>%
 ### question 15
 
 ```{r kable_missed_count}
-# Step 1 & Step 2: Calculate missing counts and merge with original data in one go
 merged_df <- grades %>%
   rowwise() %>%
   mutate(missing_exam = sum(is.na(Exam)),
          missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))) %>%
   ungroup()
 
-# Step 3 & Step 4: Filter rows and create Exam_status in one go
 filtered_df <- merged_df %>%
   filter((missing_exam == missing_online_tests) | (missing_exam == 0)) %>%
   mutate(Exam_status = ifelse(is.na(Exam), "Missed Exam", "Taken Exam"))
 
-# Count missed exams and total students missing online tests in one go
 summary_count <- filtered_df %>%
   group_by(missing_online_tests) %>%
   summarise(n_missed_exam = sum(is.na(Exam)),
             total_students = n()) %>%
   mutate(average_missed_exam_per_student = n_missed_exam / total_students)
 
-# Generate the kable table
 ktable <- knitr::kable(summary_count, 
                        col.names = c("Number of Missing Online Tests", 
                                      "Number of Missed Exams",
@@ -234,4 +230,20 @@ ggplot(data = filter(filtered_df, !is.na(Exam)),
   theme(panel.grid.major = element_line(linetype = "dashed"),
         legend.position = "none")
 ```
+
+### question 16
+
+```{r kable_missed_mcq}
+student_missed_MCQ <- grades %>%
+  rowwise() %>%
+  mutate(Missed = any(is.na(c_across(starts_with("MCQ"))))) %>%
+  ungroup() %>%
+  select(Id, Missed)
+
+ktable2 <- knitr::kable(student_missed_MCQ, 
+                   col.names = c("Student ID", "Missed MCQ"),
+                   caption = "Students Missing At Least One MCQ")
+```
+
+`r ktable2`
 
