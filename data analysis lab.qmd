@@ -220,7 +220,6 @@ The number of students who missed the exam based on the number of matching missi
 The table illustrates how many students missed the exams for each level of missing online tests. This helps to visually analyze the association between missing online tests and missing exams.
 
 ```{r ditrib_online_miss_class}
-# Step 5: Generate the ggplot visualization
 ggplot(data = filter(filtered_df, !is.na(Exam)),
        aes(x = as.factor(missing_online_tests), y = Exam)) +
   geom_boxplot() +
@@ -247,3 +246,29 @@ ktable2 <- knitr::kable(student_missed_MCQ,
 
 `r ktable2`
 
+### question 17
+
+```{r}
+library(dplyr)
+
+# Step 1: Identify students who missed at least one MCQ_xx grade
+students_missed_MCQ <- grades %>%
+  rowwise() %>%
+  mutate(Missed = any(is.na(c_across(starts_with("MCQ"))))) %>%
+  ungroup()
+
+# Step 2: Calculate the percentage of students in each group who missed at least one MCQ_xx grade
+group_missed_percentage <- students_missed_MCQ %>%
+  group_by(Group) %>%
+  summarise(Total_Students = n(),
+            Missed_Count = sum(Missed, na.rm = TRUE),
+            P_missed = (Missed_Count / Total_Students) * 100) %>%
+  select(Group, P_missed)
+
+# Show the table with 'Group' and 'P_missed' columns
+ktable3 <- knitr::kable(group_missed_percentage, 
+                  col.names = c("Group", "Percentage of Students Missed MCQ"),
+                  caption = "Percentage of Students in Each Group Who Missed At Least One MCQ")
+```
+
+`r ktable3`
