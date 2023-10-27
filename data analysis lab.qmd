@@ -158,7 +158,7 @@ missing_grades_count <- long_format_grades %>%
 
 ### question 12
 
-```{r}
+```{r distrib_miss_grades_student}
 ggplot(missing_grades_count, aes(x=Missing_Grades)) +
   geom_histogram(binwidth=1, fill="blue", color="black") +
   ggtitle("Distribution of Number of Missing Grades Per Student") +
@@ -186,33 +186,52 @@ missing_online_tests_by_student <- long_format_grades %>%
 
 ### question 15
 
-#### Approach 1: Using dplyr's Row-wise Operations
-
-```{r}
-missing_counts <- grades %>%
+```{r kable_missed_count}
+# Step 1 & Step 2: Calculate missing counts and merge with original data in one go
+merged_df <- grades %>%
   rowwise() %>%
-  mutate(missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))) %>%
+  mutate(missing_exam = sum(is.na(Exam)),
+         missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))) %>%
   ungroup()
 
-ggplot(missing_counts, aes(x = missing_online_tests)) +
-  geom_histogram(binwidth = 1, fill = "blue", alpha = 0.7, color= "black") +
-  ggtitle("Distribution of Missing Online Test Grades per Student") +
-  xlab("Number of Missing Online Test Grades") +
-  ylab("Number of Students")
+# Step 3 & Step 4: Filter rows and create Exam_status in one go
+filtered_df <- merged_df %>%
+  filter((missing_exam == missing_online_tests) | (missing_exam == 0)) %>%
+  mutate(Exam_status = ifelse(is.na(Exam), "Missed Exam", "Taken Exam"))
+
+# Count missed exams and total students missing online tests in one go
+summary_count <- filtered_df %>%
+  group_by(missing_online_tests) %>%
+  summarise(n_missed_exam = sum(is.na(Exam)),
+            total_students = n()) %>%
+  mutate(average_missed_exam_per_student = n_missed_exam / total_students)
+
+# Generate the kable table
+ktable <- knitr::kable(summary_count, 
+                       col.names = c("Number of Missing Online Tests", 
+                                     "Number of Missed Exams",
+                                     "Total Students Missing Online Tests",
+                                     "Average Missed Exam per Student"),
+                       caption = "Enhanced Summary Statistics for Missing Exams")
+
+
 ```
+Summary Statistics for Missing Exams
+The number of students who missed the exam based on the number of matching missing online tests is as follows:
 
-#### Work in progress
+`r ktable`
 
-```{r}
-# Join with the original data frame
-combined_data <- left_join(missing_online_tests_by_student, missing_counts, by = "Id")
-combined_dataa <- ungroup(combined_data)
+The table illustrates how many students missed the exams for each level of missing online tests. This helps to visually analyze the association between missing online tests and missing exams.
 
-# Visualize the data
-ggplot(combined_dataa, aes(x = Missing_Online_Tests, y = Exam)) +
-  geom_point() +
-  ggtitle("Relationship between Missing Online Tests and Exam Scores") +
-  xlab("Number of Missing Online Tests") +
-  ylab("Exam Score")
+```{r ditrib_online_miss_class}
+# Step 5: Generate the ggplot visualization
+ggplot(data = filter(filtered_df, !is.na(Exam)),
+       aes(x = as.factor(missing_online_tests), y = Exam)) +
+  geom_boxplot() +
+  ggtitle("Distribution of Exam Grades by Number of Matching Missing Online Test Grades") +
+  xlab("Number of Missing Online Test Grades") +
+  ylab("Exam Grade") +
+  theme(panel.grid.major = element_line(linetype = "dashed"),
+        legend.position = "none")
 ```
 
