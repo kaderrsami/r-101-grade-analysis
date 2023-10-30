@@ -249,15 +249,11 @@ ktable2 <- knitr::kable(student_missed_MCQ,
 ### question 17
 
 ```{r}
-library(dplyr)
-
-# Step 1: Identify students who missed at least one MCQ_xx grade
 students_missed_MCQ <- grades %>%
   rowwise() %>%
   mutate(Missed = any(is.na(c_across(starts_with("MCQ"))))) %>%
   ungroup()
 
-# Step 2: Calculate the percentage of students in each group who missed at least one MCQ_xx grade
 group_missed_percentage <- students_missed_MCQ %>%
   group_by(Group) %>%
   summarise(Total_Students = n(),
@@ -265,7 +261,6 @@ group_missed_percentage <- students_missed_MCQ %>%
             P_missed = (Missed_Count / Total_Students) * 100) %>%
   select(Group, P_missed)
 
-# Show the table with 'Group' and 'P_missed' columns
 ktable3 <- knitr::kable(group_missed_percentage, 
                   col.names = c("Group", "Percentage of Students Missed MCQ"),
                   caption = "Percentage of Students in Each Group Who Missed At Least One MCQ")
@@ -276,28 +271,23 @@ ktable3 <- knitr::kable(group_missed_percentage,
 ### question 18
 
 ```{r percent_scatter}
-# Identify students who missed at least one MCQ_xx grade
 students_missed_MCQ <- grades %>%
   rowwise() %>%
   mutate(Missed = any(is.na(c_across(starts_with("MCQ"))))) %>%
   ungroup()
 
-# Calculate the percentage of students in each group who missed at least one MCQ_xx grade
 group_missed_percentage <- students_missed_MCQ %>%
   group_by(Group) %>%
   summarise(Total_Students = n(),
             Missed_Count = sum(Missed, na.rm = TRUE),
             P_missed = (Missed_Count / Total_Students) * 100)
 
-# Calculate the average Exam grade for each group
 average_exam_by_group <- grades %>%
   group_by(Group) %>%
   summarise(Avg_Exam_Grade = mean(Exam, na.rm = TRUE))
 
-# Merge the two intermediate tables
 merged_data <- inner_join(average_exam_by_group, group_missed_percentage, by = "Group")
 
-# Create the graph
 ggplot(data = merged_data, aes(x = P_missed, y = Avg_Exam_Grade)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -306,7 +296,6 @@ ggplot(data = merged_data, aes(x = P_missed, y = Avg_Exam_Grade)) +
   ylab("Average Exam Grade")
 ```
 ```{r percent_barplot}
-# Create the bar chart
 ggplot(data = merged_data, aes(x = as.factor(Group), y = Avg_Exam_Grade, fill = P_missed)) +
   geom_bar(stat = "identity") +
   scale_fill_gradient(low = "blue", high = "red") +
