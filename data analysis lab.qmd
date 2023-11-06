@@ -99,9 +99,9 @@ Representation of the distribution of the grades at the `Exam` conditioned by th
 
 ```{r facet}
 ggplot(filtered_grades, aes(x=Exam)) +
-  geom_histogram(binwidth=1) +
+  geom_bar() +
   facet_wrap(~Group) +
-  ggtitle("Distribution of Exam Grades by Group (Faceted Histogram)") +
+  ggtitle("Distribution of Exam Grades by Group") +
   xlab("Exam Grades") +
   ylab("Frequency")
 ```
@@ -199,18 +199,12 @@ filtered_df <- merged_df %>%
 
 summary_count <- filtered_df %>%
   group_by(missing_online_tests) %>%
-  summarise(n_missed_exam = sum(is.na(Exam)),
-            total_students = n()) %>%
-  mutate(average_missed_exam_per_student = n_missed_exam / total_students)
+  summarise(total_students = n())
 
 ktable <- knitr::kable(summary_count, 
                        col.names = c("Number of Missing Online Tests", 
-                                     "Number of Missed Exams",
-                                     "Total Students Missing Online Tests",
-                                     "Average Missed Exam per Student"),
+                                     "Total Students Missing Online Tests"),
                        caption = "Enhanced Summary Statistics for Missing Exams")
-
-
 ```
 Summary Statistics for Missing Exams
 The number of students who missed the exam based on the number of matching missing online tests is as follows:
