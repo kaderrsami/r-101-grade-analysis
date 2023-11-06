@@ -145,7 +145,7 @@ ggplot(missed_exam_counts, aes(x=Group, y=Missed_Exam_Count)) +
 
 ```{r}
 long_format_grades <- grades %>%
-  gather(key = "name", value = "value", -Id, -Group)
+  pivot_longer(cols = -c(Id, Group), names_to = "name", values_to = "value")
 ```
 
 ### question 11
@@ -297,5 +297,17 @@ ggplot(data = merged_data, aes(x = as.factor(Group), y = Avg_Exam_Grade, fill = 
   xlab("Group") +
   ylab("Average Exam Grade") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+Comparison of Average Exam Grades and Percentage of Missed MCQs by Group:
+
+```{r av_ex_grad_&_percent}
+# Create the initial ggplot object
+p <- ggplot(data = merged_data, aes(x = as.factor(Group))) +
+  geom_bar(aes(y = Avg_Exam_Grade), stat = "identity", color = "black") +
+  scale_y_continuous(name = "Average Exam Grade", sec.axis = sec_axis(~ . / 10, name = "Percentage of Missed MCQ")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Add the points for the percentage missed with a second y-axis
+p + geom_point(aes(y = P_missed / 10), color = "red")
 ```
 
