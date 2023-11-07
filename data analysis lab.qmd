@@ -34,12 +34,13 @@ grades <- vroom(here("grades.csv"))
 ### question 2
 
 ```{r}
-exam_stats <- grades %>% 
+exam_stats <- grades %>%
   summarise(
-            Min = min(Exam, na.rm = TRUE),
-            Max = max(Exam, na.rm = TRUE),
-            Median = median(Exam, na.rm = TRUE),
-            Mean = mean(Exam, na.rm = TRUE))
+    Min = min(Exam, na.rm = TRUE),
+    Max = max(Exam, na.rm = TRUE),
+    Median = median(Exam, na.rm = TRUE),
+    Mean = mean(Exam, na.rm = TRUE)
+  )
 ```
 
 ```{r table1, results='asis'}
@@ -62,7 +63,7 @@ A total of `r num_missing_exam` students did not take the final exam.
 ```{r bar_exam_grades}
 filtered_grades <- grades %>% filter(!is.na(Exam))
 
-ggplot(filtered_grades, aes(x=Exam)) +
+ggplot(filtered_grades, aes(x = Exam)) +
   geom_bar() +
   ggtitle("Bar Plot for Exam Grades") +
   xlab("Exam Grades") +
@@ -84,8 +85,8 @@ kable(group_counts, caption = "Count for Exam Grades")
 ### question 6
 
 ```{r bar_count}
-ggplot(group_counts, aes(x=Group, y=Count)) +
-  geom_bar(stat="identity") +
+ggplot(group_counts, aes(x = Group, y = Count)) +
+  geom_bar(stat = "identity") +
   ggtitle("Number of Students in Each Group") +
   xlab("Group") +
   ylab("Number of Students") +
@@ -98,7 +99,7 @@ Representation of the distribution of the grades at the `Exam` conditioned by th
 
 
 ```{r facet}
-ggplot(filtered_grades, aes(x=Exam)) +
+ggplot(filtered_grades, aes(x = Exam)) +
   geom_bar() +
   facet_wrap(~Group) +
   ggtitle("Distribution of Exam Grades by Group") +
@@ -109,7 +110,7 @@ ggplot(filtered_grades, aes(x=Exam)) +
 An other epresentation of the distribution of the grades at the `Exam` conditioned by the group
 
 ```{r box}
-ggplot(filtered_grades, aes(x=Group, y=Exam)) +
+ggplot(filtered_grades, aes(x = Group, y = Exam)) +
   geom_boxplot() +
   ggtitle("Distribution of Exam Grades by Group (Boxplot)") +
   xlab("Group") +
@@ -133,7 +134,7 @@ knitr::kable(missed_exam_counts, caption = "Number of Students Who Missed the Ex
 ### question 9
 
 ```{r missed_exam_count}
-ggplot(missed_exam_counts, aes(x=Group, y=Missed_Exam_Count)) +
+ggplot(missed_exam_counts, aes(x = Group, y = Missed_Exam_Count)) +
   geom_col() +
   ggtitle("Number of Students Who Missed the Exam by Group") +
   xlab("Group") +
@@ -159,8 +160,8 @@ missing_grades_count <- long_format_grades %>%
 ### question 12
 
 ```{r distrib_miss_grades_student}
-ggplot(missing_grades_count, aes(x=Missing_Grades)) +
-  geom_histogram(binwidth=1, fill="blue", color="black") +
+ggplot(missing_grades_count, aes(x = Missing_Grades)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
   ggtitle("Distribution of Number of Missing Grades Per Student") +
   xlab("Number of Missing Grades") +
   ylab("Number of Students")
@@ -189,8 +190,10 @@ missing_online_tests_by_student <- long_format_grades %>%
 ```{r kable_missed_count}
 merged_df <- grades %>%
   rowwise() %>%
-  mutate(missing_exam = sum(is.na(Exam)),
-         missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))) %>%
+  mutate(
+    missing_exam = sum(is.na(Exam)),
+    missing_online_tests = sum(is.na(c_across(starts_with("Online_MCQ"))))
+  ) %>%
   ungroup()
 
 filtered_df <- merged_df %>%
@@ -201,10 +204,13 @@ summary_count <- filtered_df %>%
   group_by(missing_online_tests) %>%
   summarise(total_students = n())
 
-ktable <- knitr::kable(summary_count, 
-                       col.names = c("Number of Missing Online Tests", 
-                                     "Total Students Missing Online Tests"),
-                       caption = "Enhanced Summary Statistics for Missing Exams")
+ktable <- knitr::kable(summary_count,
+  col.names = c(
+    "Number of Missing Online Tests",
+    "Total Students Missing Online Tests"
+  ),
+  caption = "Enhanced Summary Statistics for Missing Exams"
+)
 ```
 Summary Statistics for Missing Exams
 The number of students who missed the exam based on the number of matching missing online tests is as follows:
@@ -214,14 +220,18 @@ The number of students who missed the exam based on the number of matching missi
 The table illustrates how many students missed the exams for each level of missing online tests. This helps to visually analyze the association between missing online tests and missing exams.
 
 ```{r ditrib_online_miss_class}
-ggplot(data = filter(filtered_df, !is.na(Exam)),
-       aes(x = as.factor(missing_online_tests), y = Exam)) +
+ggplot(
+  data = filter(filtered_df, !is.na(Exam)),
+  aes(x = as.factor(missing_online_tests), y = Exam)
+) +
   geom_boxplot() +
   ggtitle("Distribution of Exam Grades by Number of Matching Missing Online Test Grades") +
   xlab("Number of Missing Online Test Grades") +
   ylab("Exam Grade") +
-  theme(panel.grid.major = element_line(linetype = "dashed"),
-        legend.position = "none")
+  theme(
+    panel.grid.major = element_line(linetype = "dashed"),
+    legend.position = "none"
+  )
 ```
 
 ### question 16
@@ -233,9 +243,10 @@ student_missed_MCQ <- grades %>%
   ungroup() %>%
   select(Id, Missed)
 
-ktable2 <- knitr::kable(student_missed_MCQ, 
-                   col.names = c("Student ID", "Missed MCQ"),
-                   caption = "Students Missing At Least One MCQ")
+ktable2 <- knitr::kable(student_missed_MCQ,
+  col.names = c("Student ID", "Missed MCQ"),
+  caption = "Students Missing At Least One MCQ"
+)
 ```
 
 `r ktable2`
@@ -250,14 +261,17 @@ students_missed_MCQ <- grades %>%
 
 group_missed_percentage <- students_missed_MCQ %>%
   group_by(Group) %>%
-  summarise(Total_Students = n(),
-            Missed_Count = sum(Missed, na.rm = TRUE),
-            P_missed = (Missed_Count / Total_Students) * 100) %>%
+  summarise(
+    Total_Students = n(),
+    Missed_Count = sum(Missed, na.rm = TRUE),
+    P_missed = (Missed_Count / Total_Students) * 100
+  ) %>%
   select(Group, P_missed)
 
-ktable3 <- knitr::kable(group_missed_percentage, 
-                  col.names = c("Group", "Percentage of Students Missed MCQ"),
-                  caption = "Percentage of Students in Each Group Who Missed At Least One MCQ")
+ktable3 <- knitr::kable(group_missed_percentage,
+  col.names = c("Group", "Percentage of Students Missed MCQ"),
+  caption = "Percentage of Students in Each Group Who Missed At Least One MCQ"
+)
 ```
 
 `r ktable3`
@@ -272,9 +286,11 @@ students_missed_MCQ <- grades %>%
 
 group_missed_percentage <- students_missed_MCQ %>%
   group_by(Group) %>%
-  summarise(Total_Students = n(),
-            Missed_Count = sum(Missed, na.rm = TRUE),
-            P_missed = (Missed_Count / Total_Students) * 100)
+  summarise(
+    Total_Students = n(),
+    Missed_Count = sum(Missed, na.rm = TRUE),
+    P_missed = (Missed_Count / Total_Students) * 100
+  )
 
 average_exam_by_group <- grades %>%
   group_by(Group) %>%
@@ -301,13 +317,10 @@ ggplot(data = merged_data, aes(x = as.factor(Group), y = Avg_Exam_Grade, fill = 
 Comparison of Average Exam Grades and Percentage of Missed MCQs by Group:
 
 ```{r av_ex_grad_&_percent}
-# Create the initial ggplot object
 p <- ggplot(data = merged_data, aes(x = as.factor(Group))) +
   geom_bar(aes(y = Avg_Exam_Grade), stat = "identity", color = "black") +
   scale_y_continuous(name = "Average Exam Grade", sec.axis = sec_axis(~ . / 10, name = "Percentage of Missed MCQ")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Add the points for the percentage missed with a second y-axis
 p + geom_point(aes(y = P_missed / 10), color = "red")
 ```
-
