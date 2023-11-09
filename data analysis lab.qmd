@@ -34,6 +34,7 @@ grades <- vroom(here("grades.csv"))
 ### question 2
 
 ```{r}
+#| message: false
 exam_stats <- grades %>%
   summarise(
     Min = min(Exam, na.rm = TRUE),
@@ -44,6 +45,7 @@ exam_stats <- grades %>%
 ```
 
 ```{r table1, results='asis'}
+#| message: false
 kable(exam_stats, caption = "Statistics for Exam Grades")
 ```
 
@@ -279,6 +281,7 @@ ktable3 <- knitr::kable(group_missed_percentage,
 ### question 18
 
 ```{r percent_scatter}
+#| message: false
 students_missed_MCQ <- grades %>%
   rowwise() %>%
   mutate(Missed = any(is.na(c_across(starts_with("MCQ"))))) %>%
